@@ -1,0 +1,17 @@
+name = "megaturboearn-bot"
+main = "src/index.ts"
+compatibility_date = "2026-06-18"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "megaturboe-db"
+database_id = "f67401fe-d744-4487-910d-96c33aff1215"
+
+[vars]
+APP_URL = "https://megaturboearn-platform.sarrhome.workers.dev"
+BOT_TOKEN = "8546533987:AAG_M_V48Jpn7zyMPYELIH9nX5cOmMNc-p8api"
+ADMIN_ID = "6960850082"
+
+[assets]
+directory = "../dist"
+binding = "ASSETS"

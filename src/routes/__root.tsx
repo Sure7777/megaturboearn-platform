@@ -27,6 +27,9 @@ export const Route = createRootRoute({
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' as const },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap' },
     ],
+    scripts: [
+      { src: 'https://telegram.org/js/telegram-web-app.js' }
+    ]
   }),
   component: RootDocument,
   notFoundComponent: NotFoundPage,
@@ -66,6 +69,14 @@ function RootDocument() {
 
   React.useEffect(() => {
     setIsMounted(true)
+    if (typeof window !== 'undefined' && (window as any).Telegram?.WebApp) {
+      try {
+        (window as any).Telegram.WebApp.ready()
+        (window as any).Telegram.WebApp.expand()
+      } catch (e) {
+        console.warn('Telegram WebApp init warning:', e)
+      }
+    }
   }, [])
 
   return (

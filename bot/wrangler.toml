@@ -2,6 +2,10 @@ name = "megaturboearn-platform"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
+[assets]
+directory = "../dist"
+binding = "ASSETS"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "megaturboe-db"
@@ -11,6 +15,7 @@ database_id = "f67401fe-d744-4487-910d-96c33aff1215"
 APP_URL = "https://megaturboearn-platform.sarrhome.workers.dev"
 TELEGRAM_BOT_TOKEN = "8546533987:AAG_M_V48Jpn7zyMPYELIH9nX5cOmMNc-p8"
 BOT_TOKEN = "8546533987:AAG_M_V48Jpn7zyMPYELIH9nX5cOmMNc-p8"
+WEBHOOK_URL = "https://megaturboearn-platform.sarrhome.workers.dev/webhook"
 TELEGRAM_ADMIN_ID = "6960850082"
 ADMIN_TELEGRAM_ID = "6960850082"
 ADMIN_ID = "6960850082"

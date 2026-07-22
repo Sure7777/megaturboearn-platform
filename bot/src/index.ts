@@ -639,8 +639,22 @@ app.get('/api/tma/referrals/:userId', async (c) => {
 // ═══════════════════════════════════════════════════════════════════════════════
 // Catch-all: serve static files & SPA routes via ASSETS binding
 // ═══════════════════════════════════════════════════════════════════════════════
-app.get('*', (c) => {
-  return c.env.ASSETS.fetch(c.req.raw)
+app.get('*', async (c) => {
+  if (!c.env.ASSETS) {
+    return c.text('ASSETS binding missing', 500)
+  }
+  try {
+    const res = await c.env.ASSETS.fetch(c.req.raw)
+    if (res.status === 404) {
+      // SPA Fallback: serve /index.html
+      const indexReq = new Request(new URL('/index.html', c.req.url), c.req.raw)
+      return await c.env.ASSETS.fetch(indexReq)
+    }
+    return res
+  } catch (err) {
+    console.error('Asset fetch error:', err)
+    return c.text('Internal Server Error', 500)
+  }
 })
 
 export default app

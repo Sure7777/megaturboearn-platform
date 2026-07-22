@@ -3,6 +3,9 @@ import { Outlet, createRootRoute, HeadContent, Scripts, Link } from '@tanstack/r
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BlinkUIProvider, Toaster } from '@blinkdotnew/ui'
 import { AdminAuthProvider } from '@/lib/admin-auth'
+import { DefaultErrorComponent } from '@/components/ErrorBoundary'
+import '@/index.css'
+import appCss from '@/index.css?url'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +29,7 @@ export const Route = createRootRoute({
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' as const },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap' },
+      { rel: 'stylesheet', href: appCss },
     ],
     scripts: [
       { src: 'https://telegram.org/js/telegram-web-app.js' }
@@ -33,6 +37,7 @@ export const Route = createRootRoute({
   }),
   component: RootDocument,
   notFoundComponent: NotFoundPage,
+  errorComponent: DefaultErrorComponent,
 })
 
 function NotFoundPage() {

@@ -1,9 +1,9 @@
 name = "megaturboearn-platform"
-main = "src/index.ts"
+main = "bot/src/index.ts"
 compatibility_date = "2024-01-01"
 
 [assets]
-directory = "../dist"
+directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "single-page-app"
 

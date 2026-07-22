@@ -8,7 +8,7 @@ database_name = "megaturboe-db"
 database_id = "f67401fe-d744-4487-910d-96c33aff1215"
 
 [vars]
-APP_URL = "https://megaturboearn-platform.sarro.workers.dev"
+APP_URL = "https://megaturboearn-platform.sarrhome.workers.dev"
 TELEGRAM_BOT_TOKEN = "8546533987:AAG_M_V48Jpn7zyMPYELIH9nX5cOmMNc-p8"
 BOT_TOKEN = "8546533987:AAG_M_V48Jpn7zyMPYELIH9nX5cOmMNc-p8"
 TELEGRAM_ADMIN_ID = "6960850082"

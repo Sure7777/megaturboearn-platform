@@ -52,6 +52,106 @@ async function sendMessage(token: string, chatId: string | number, text: string,
   }
 }
 
+async function initDB(db: D1Database) {
+  try {
+    await db.batch([
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS users (
+          id TEXT PRIMARY KEY,
+          username TEXT,
+          display_name TEXT,
+          balance_points INTEGER DEFAULT 0,
+          balance_usd REAL DEFAULT 0,
+          level TEXT DEFAULT 'المبتدئ',
+          referred_by TEXT,
+          is_blocked INTEGER DEFAULT 0,
+          last_lucky_wheel TEXT,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS referrals (
+          referrer_id TEXT,
+          referred_id TEXT,
+          level INTEGER DEFAULT 1,
+          commission_earned REAL DEFAULT 0,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY(referrer_id, referred_id)
+        )
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS items (
+          id TEXT PRIMARY KEY,
+          group_id TEXT,
+          name TEXT,
+          type TEXT,
+          reward_points INTEGER DEFAULT 1000,
+          url TEXT,
+          daily_limit INTEGER DEFAULT 1,
+          current_completions INTEGER DEFAULT 0,
+          max_total_completions INTEGER DEFAULT 1000,
+          is_active INTEGER DEFAULT 1,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS ad_groups (
+          id TEXT PRIMARY KEY,
+          name TEXT,
+          type TEXT,
+          order_index INTEGER DEFAULT 0,
+          is_active INTEGER DEFAULT 1
+        )
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS withdrawals (
+          id TEXT PRIMARY KEY,
+          user_id TEXT,
+          amount_usd REAL,
+          network TEXT,
+          wallet_address TEXT,
+          status TEXT DEFAULT 'pending',
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS transactions (
+          id TEXT PRIMARY KEY,
+          user_id TEXT,
+          type TEXT,
+          amount_points INTEGER DEFAULT 0,
+          amount_usd REAL DEFAULT 0,
+          description TEXT,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS user_activity (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id TEXT,
+          item_id TEXT,
+          type TEXT,
+          completed_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS settings (
+          key TEXT PRIMARY KEY,
+          value TEXT
+        )
+      `),
+    ])
+  } catch (e) {
+    console.error('initDB error:', e)
+  }
+}
+
+// ─── 0. Database Auto-Init Endpoint ─────────────────────────────────────────
+app.get('/api/init-db', async (c) => {
+  await initDB(c.env.DB)
+  return c.json({ success: true, message: 'Cloudflare D1 Database initialized successfully!' })
+})
+
 // ─── 1. Webhook Registration ─────────────────────────────────────────────────
 app.get('/register-webhook', async (c) => {
   const token = c.env.BOT_TOKEN
@@ -62,8 +162,20 @@ app.get('/register-webhook', async (c) => {
   return c.json(result)
 })
 
+// ─── 1b. GET /webhook for Browser Testing ─────────────────────────────────────
+app.get('/webhook', async (c) => {
+  await initDB(c.env.DB)
+  return c.json({
+    ok: true,
+    service: 'MegaTurboEarn Telegram Bot Webhook',
+    status: 'ACTIVE',
+    info: 'Send POST requests with Telegram update objects, or visit /register-webhook to configure with Telegram API.',
+  })
+})
+
 // ─── 2. Bot Webhook ──────────────────────────────────────────────────────────
 app.post('/webhook', async (c) => {
+  await initDB(c.env.DB)
   const token = c.env.BOT_TOKEN
   let update: any
   try {

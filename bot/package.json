@@ -1,0 +1,10 @@
+{
+  "name": "megaturboearn-bot",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "dependencies": {
+    "hono": "^4.0.0"
+  }
+}

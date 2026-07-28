@@ -1,0 +1,7 @@
+{
+  "name": "MegaTurboEarn",
+  "description": "منصة كسب نقاط ومكافآت عن طريق مشاهدة الإعلانات القصيرة والطويلة وإتمام المهام الترويجية لتيليجرام",
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
